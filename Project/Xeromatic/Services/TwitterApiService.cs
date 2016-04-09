@@ -27,7 +27,7 @@ namespace Xeromatic.Services
 
         public IEnumerable<Tweet> GetTweets()
         {
-            var tweets = Auth.ExecuteOperationWithCredentials(_creds, () => Timeline.GetUserTimeline("xero", 10)).ToList();
+            var tweets = Auth.ExecuteOperationWithCredentials(_creds, () => Timeline.GetUserTimeline("TheRealSarahJL", 10)).ToList();
 
             if (tweets.Any())
             {
