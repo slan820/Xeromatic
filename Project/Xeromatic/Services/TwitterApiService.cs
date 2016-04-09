@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using Tweetinvi;
 using Tweetinvi.Core.Credentials;
-using Tweetinvi.Core.Interfaces;
+using Tweet = Xeromatic.Models.Tweet;
+using System.Linq;
+
 
 namespace Xeromatic.Services
 {
-    public class TwitterApiService
+    public class TwitterApiService:ITwitterService
     {
         // Get keys from: https://apps.twitter.com
         // Wiki for tweetinvi: https://github.com/linvi/tweetinvi/wiki
@@ -16,21 +18,27 @@ namespace Xeromatic.Services
         {
             _creds = new TwitterCredentials
             {
-                ConsumerKey = "Add your ConsumerKey here",
-                ConsumerSecret = "Add your ConsumerSecret here",
-                AccessToken = "Add your AccessToken here",
-                AccessTokenSecret = "Add your AccessTokenSecret here"
+                ConsumerKey = "gPWnWKttPAlLVHDjBMogEdcDE",
+                ConsumerSecret = "3W10sg46ztsmjkxVhogdqRHpeOVQ0pMwgJdHSnt22I7kSKAw01",
+                AccessToken = "718557150985871360-jYSOZA69GQEf3PlOrVso6ugATBpkmJI",
+                AccessTokenSecret = "53XlIzrRdcqglbh5Nku5ZhuWynUhQJHJIBq0PaShXIdLH"
             };
         }
 
-        public IEnumerable<ITweet> GetTweets()
+        public IEnumerable<Tweet> GetTweets()
         {
-            var tweets = Auth.ExecuteOperationWithCredentials(_creds, () =>
-            {
-                return Timeline.GetHomeTimeline();
-            });
+            var tweets = Auth.ExecuteOperationWithCredentials(_creds, () => Timeline.GetUserTimeline("xero", 10)).ToList();
 
-            return tweets;
+            if (tweets.Any())
+            {
+                return tweets.Select(t => new Tweet
+                {
+                    Id = t.Id,
+                    Text = t.Text
+                });
+            }
+            return new List<Tweet>();
+
         }
 
     }
